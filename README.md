@@ -130,7 +130,7 @@ GET https://hitmeapi.com:8080/wallets
 ```
 **Header**
 ```
-Authorization: Bearer <access_token>
+Authorization: Bearer <access_token> (required)
 ```
 | Header        | Value                 | Function (EN)                        |
 | ------------- | --------------------- | ------------------------------------ |
@@ -190,7 +190,7 @@ POST https://hitmeapi.com:8080/payment
 **Header**
 ```
 Content-Type: application/json  
-Authorization: Bearer <access_token>/(example : "eyJhbGciOiJIUzI1NiIsInR5cCI...",)
+Authorization: Bearer <access_token> (required)
 ```
 | Header        | Value                 | Function (EN)                |
 | ------------- | --------------------- | ---------------------------- |
@@ -253,7 +253,7 @@ GET https://hitmeapi.com:8080/payments/{payment_id}
 | Authorization | Bearer <access_token> | Required Bearer token |
 **header**
 ```
-Authorization: Bearer <access_token>/(example : "eyJhbGciOiJIUzI1NiIsInR5cCI...",)
+Authorization: Bearer <access_token> (required)
 ```
 **Response Success**
 ```
