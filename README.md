@@ -242,7 +242,7 @@ Missing field wallet_id → request failed.
 💡 Non-Technical Description
 Merchants use this endpoint to create a new transaction. A QR code/link is generated for payment.
 
-##4. Check Payment Status
+## 4. Check Payment Status
 **endpoint**
 ```
 GET https://hitmeapi.com:8080/payments/{payment_id}
@@ -285,7 +285,7 @@ Payment ID not found.
 💡 Non-Technical Description
 Merchants use this endpoint to check if a payment is successful, pending, or failed.
 
-##5. Refund Payment
+## 5. Refund Payment
 **Endpoint**
 ```
 POST https://hitmeapi.com:8080/payments/{payment_id}/refund
