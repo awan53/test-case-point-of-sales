@@ -8,6 +8,41 @@ Dana, ShopeePay). Merchants will use the API to:
 4. Check transaction status.
 5. Handle refund requests 
 The API uses Bearer Token authentication and returns responses in JSON format. 
+
+```mermaid
+flowchart TD
+
+A([Start]) --> B[Merchant Request Auth Token]
+B -->|Valid API Key/Secret| C[System returns Access Token]
+B -->|Invalid Credentials| Z[Error Response: Unauthorized]
+
+C --> D[Get Wallet Channels]
+D -->|Success| E[List of Wallets Returned]
+D -->|Failed| Z
+
+E --> F[Create Payment Request]
+F -->|Success| G[Payment Created: Pending + QR Code]
+F -->|Failed| Z
+
+G --> H[Check Payment Status]
+H -->|Pending| H
+H -->|Success| I[Transaction Completed]
+H -->|Failed| J[Transaction Failed]
+
+I --> K[Refund Request?]
+K -->|Yes| L[Process Refund]
+K -->|No| M([End])
+
+L -->|Refund Allowed| N[Refund Processing]
+L -->|Refund Not Allowed| Z
+
+N --> M
+J --> M
+Z --> M
+
+```
+
+
 **End Point** 
 ---
 Domain: https://hitmeapi.com
