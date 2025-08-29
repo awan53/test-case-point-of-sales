@@ -45,7 +45,20 @@ Z --> M
 
 **End Point** 
 ---
-Domain: https://hitmeapi.com
+Write the complete URL and method (GET, POST, etc.)
+example
+```
+POST https://hitmeapi.com:8080/auth/token
+```
+Headers
+
+Must include the content type (Content-Type) and authentication (Authorization).
+
+```
+Content-Type: application/json
+Authorization: Bearer <access_token>
+
+```
 
 Port: 8080
 
@@ -53,11 +66,20 @@ Authentication: Bearer Token
 
 Format: JSON
 
+| Endpoint                           | Description                                                 |
+| ---------------------------------- | ----------------------------------------------------------- |
+| POST /auth/token                   |  authentication & get token.                                |
+| GET /wallets                       | Displays a list of e-wallets (GoPay, OVO, Dana, ShopeePay). |
+| POST /payments                     | Creates payment requests.                                   |
+| GET /payments/{payment_id}         | Checks payment status.                                      |
+| POST /payments/{payment_id}/refund | Creates refund requests.                                    |
+
+
 ## 1. Authentication – Get Access Token
 
 ### Request
 
-POST [/token](https://hitmeapi.com/auth/token) 
+POST [/token](https://hitmeapi.com:8080/auth/token) 
 
 ### Headers
 ```
@@ -97,7 +119,7 @@ json
 ```
 Non-Technical Description (Merchant View)
 
-Endpoint ini digunakan merchant untuk masuk ke sistem. Hasilnya adalah kunci akses (token) yang dipakai setiap kali memanggil API lain.
+This endpoint is used by merchants to log in to the system. The result is an access key (token) that is used each time they call another API.
 
 ## 2. Get Wallet Channels
 ### Request
