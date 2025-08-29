@@ -63,5 +63,43 @@ Non-Technical Description (Merchant View)
 
 Endpoint ini digunakan merchant untuk masuk ke sistem. Hasilnya adalah kunci akses (token) yang dipakai setiap kali memanggil API lain.
 
+2. Get Wallet Channels
+Request
+
+GET https://hitmeapi.com:8080/wallets
+
+Headers
+```
+Authorization: Bearer <access_token>
+```
+Response
+```
+json
+{
+  "wallets": [
+    { "id": "gopay", "name": "GoPay", "currency": "IDR" },
+    { "id": "ovo", "name": "OVO", "currency": "IDR" },
+    { "id": "dana", "name": "Dana", "currency": "IDR" },
+    { "id": "shopeepay", "name": "ShopeePay", "currency": "IDR" }
+  ]
+}
+```
+Response – Success
+```
+{
+  "status": "success",
+  "message": "Wallet channels retrieved successfully",
+  "data": {
+    "wallets": [
+      { "id": "gopay", "name": "GoPay", "currency": "IDR" },
+      { "id": "ovo", "name": "OVO", "currency": "IDR" },
+      { "id": "dana", "name": "Dana", "currency": "IDR" },
+      { "id": "shopeepay", "name": "ShopeePay", "currency": "IDR" }
+    ]
+  }
+}
+```
+
+
 
 
