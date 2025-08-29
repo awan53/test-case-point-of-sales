@@ -296,7 +296,7 @@ POST https://hitmeapi.com:8080/payments/{payment_id}/refund
 | Header        | Value                 | Function                     |
 | ------------- | --------------------- | ---------------------------- |
 | Content-Type  | application/json      | Request/response JSON format |
-| Authorization | Bearer <access_token> | Required Bearer token        |```
+| Authorization | Bearer <access_token> | Required Bearer token        |
 
 ```
 Content-Type: application/json
