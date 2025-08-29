@@ -1,13 +1,19 @@
-# POS Multiple E-Wallet
- Company Hitachi is developing a Payment Integration Platform that allows merchants to
-connect Point-of-Sale (POS) systems with multiple e-wallet providers (GoPay, OVO,
-Dana, ShopeePay). Merchants will use the API to:  
-1. Authenticate securely.
-2. Retrieve available e-wallet channels.
-3. Create a payment request.
-4. Check transaction status.
-5. Handle refund requests 
-The API uses Bearer Token authentication and returns responses in JSON format. 
+# POS Multiple E-Wallet API Documentation
+
+The company is developing a **Payment Integration Platform** that allows merchants to connect their **Point-of-Sale (POS)** systems with multiple e-wallet providers (GoPay, OVO, Dana, ShopeePay).  
+
+Merchants can use this API to:  
+1. Authenticate securely.  
+2. Retrieve available e-wallet channels.  
+3. Create payment requests.  
+4. Check transaction status.  
+5. Handle refund requests.  
+
+This API uses **Bearer Token Authentication** and all responses are returned in **JSON format**.  
+
+---
+
+## 🔎 Flowchart Overview
 
 ```mermaid
 flowchart TD
@@ -29,7 +35,7 @@ H -->|Pending| H
 H -->|Success| I[Transaction Completed]
 H -->|Failed| J[Transaction Failed]
 
-I --> K[Refund Request?]
+I --> K{Refund Request?}
 K -->|Yes| L[Process Refund]
 K -->|No| M([End])
 
@@ -39,26 +45,11 @@ L -->|Refund Not Allowed| Z
 N --> M
 J --> M
 Z --> M
-
 ```
 
+ ## 📌 API General Information
 
-**End Point** 
----
-Write the complete URL and method (GET, POST, etc.)
-example
-```
-POST https://hitmeapi.com:8080/auth/token
-```
-Headers
-
-Must include the content type (Content-Type) and authentication (Authorization).
-
-```
-Content-Type: application/json
-Authorization: Bearer <access_token>
-
-```
+Base URL: https://hitmeapi.com:8080
 
 Port: 8080
 
@@ -66,84 +57,90 @@ Authentication: Bearer Token
 
 Format: JSON
 
-| Endpoint                           | Description                                                 |
-| ---------------------------------- | ----------------------------------------------------------- |
-| POST /auth/token                   |  authentication & get token.                                |
-| GET /wallets                       | Displays a list of e-wallets (GoPay, OVO, Dana, ShopeePay). |
-| POST /payments                     | Creates payment requests.                                   |
-| GET /payments/{payment_id}         | Checks payment status.                                      |
-| POST /payments/{payment_id}/refund | Creates refund requests.                                    |
+| Endpoint                             | Description                      |
+| ------------------------------------ | -------------------------------- |
+| `POST /auth/token`                   | Authenticate & get access token. |
+| `GET /wallets`                       | Retrieve available e-wallets.    |
+| `POST /payments`                     | Create a payment request.        |
+| `GET /payments/{payment_id}`         | Check payment status.            |
+| `POST /payments/{payment_id}/refund` | Submit a refund request.         |
 
+### 1. Authentication – Get Access Token
 
-## 1. Authentication – Get Access Token
-
-### Request
-
-POST [/token](https://hitmeapi.com:8080/auth/token) 
-
-### Headers
+**Endpoint:**
 ```
-Content-Type: application/json  
-Authorization: Bearer <access_token>
+POST https://hitmeapi.com:8080/auth/token
 ```
-### Request Body
-| Field        | Type   | Required | Description         |
-| ------------ | ------ | -------- | ------------------- |
-| `api_key`    | string | Yes      | API key merchant    |
-| `api_secret` | string | Yes      | Secret key merchant |
 
-### Example Request
+**Headers:**
 ```
-body
+Content-Type: application/json
+```
+| Header       | Value            |  Function (EN)                    |
+| ------------ | ---------------- |  -------------------------------- |
+| Content-Type | application/json |  Data format for request/response |
+
+Example Request:
+```
 {
   "api_key": "your_api_key",
   "api_secret": "your_api_secret"
 }
 ```
-### Response – Success
+| Field        | Type   | Required | Description           |
+| ------------ | ------ | -------- | --------------------- |
+| `api_key`    | string | Yes      | Merchant’s API key    |
+| `api_secret` | string | Yes      | Merchant’s secret key |
+
+
+access_token → token to be used in subsequent API requests.
+
+expires_in → token validity duration (in seconds).
+
+**Response – Success:**
 ```
-json
 {
-"access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI...",
-"expires_in": 3600
-} 
-```
-### Respone - Failed
-```
-json
-{
-"errorCode": "200",
-"errorType": "invalid_credentials",
-"errorMessage": "API key or secret is incorrect."
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI...",
+  "expires_in": 3600
 }
 ```
-Non-Technical Description (Merchant View)
+📌 Explanation :
 
-This endpoint is used by merchants to log in to the system. The result is an access key (token) that is used each time they call another API.
+access_token → token to be used in subsequent API requests.
 
-## 2. Get Wallet Channels
-### Request
+expires_in → token validity duration (in seconds).
 
-GET[/wallets](https://hitmeapi.com:8080/wallets)
-
-### Headers
+**Response – Failed:**
 ```
-Content-Type: application/json  
-Authorization: Bearer <access_token>/(example : "eyJhbGciOiJIUzI1NiIsInR5cCI...",)
-```
-### Request - body
-```
-json
 {
-  "wallets": [
-    { "id": "gopay", "name": "GoPay", "currency": "IDR" },
-    { "id": "ovo", "name": "OVO", "currency": "IDR" },
-    { "id": "dana", "name": "Dana", "currency": "IDR" },
-    { "id": "shopeepay", "name": "ShopeePay", "currency": "IDR" }
-  ]
+  "errorCode": "401",
+  "errorType": "invalid_credentials",
+  "errorMessage": "API key or secret is incorrect."
 }
 ```
-### Response – Success
+📌 Scenario : Occurs when the merchant provides an invalid api_key or api_secret.
+
+💡 Non-Technical Description
+This endpoint is used by merchants to log in. The response provides an access token required for other API calls.
+
+### 2. Get Wallet Channels
+**Endpoint**
+```
+GET https://hitmeapi.com:8080/wallets
+```
+**Header**
+```
+Authorization: Bearer <access_token>
+```
+| Header        | Value                 | Function (EN)                        |
+| ------------- | --------------------- | ------------------------------------ |
+| Authorization | Bearer <access_token> | Required Bearer token authentication |
+
+🔹 Request Body
+Tidak ada request body.
+No request body required.
+
+**Response - Success**
 ```
 {
   "status": "success",
@@ -158,37 +155,9 @@ json
   }
 }
 ```
-### Response - Failed
+Explanation : API returns the list of available e-wallets.
 
-```
-{
-  “errorCode”: “200”,
-  "errorType": "invalid_credentials",
-  "errorMessage": "API key or secret is incorrect."
-}
-
-```
-
-internal server - error
-```
-{
-  "status": "failed",
-  "errorCode": "500",
-  "errorType": "server_error",
-  "errorMessage": "An unexpected error occurred on the server."
-}
-```
-Skenario: Ada bug atau error di server API.
-
-Wallet Service Unavailable
-```
-{
-  "status": "failed",
-  "errorCode": "503",
-  "errorType": "service_unavailable",
-  "errorMessage": "Unable to retrieve wallet list at the moment. Please try again later."
-}
-```
+**Response – Failed**
 
 Unauthorized / Token Expired
 ```
@@ -199,17 +168,46 @@ Unauthorized / Token Expired
   "errorMessage": "Access token is missing or expired."
 }
 ```
-## 3. Create Payment Request
-POST[/payment](https://hitmeapi.com:8080/payment)
+Token is missing or expired.
+```
+{
+  "status": "failed",
+  "errorCode": "503",
+  "errorType": "service_unavailable",
+  "errorMessage": "Unable to retrieve wallet list at the moment. Please try again later."
+}
+```
+service is currently unavailable.
 
-### Header
+💡 Non-Technical Description
+This endpoint shows which e-wallets are available for customers (GoPay, OVO, Dana, ShopeePay).
+
+### 3. Create Payment Request
+**Endpoint**
+```
+POST https://hitmeapi.com:8080/payment 
+```
+**Header**
 ```
 Content-Type: application/json  
 Authorization: Bearer <access_token>/(example : "eyJhbGciOiJIUzI1NiIsInR5cCI...",)
 ```
-### Request
+| Header        | Value                 | Function (EN)                |
+| ------------- | --------------------- | ---------------------------- |
+| Content-Type  | application/json      | Request/response JSON format |
+| Authorization | Bearer <access_token> | Required Bearer token        |
+
+**Request Body**
+| Field         | Type   | Required |  Description (EN)              |
+| ------------- | ------ | -------- |  ----------------------------- |
+| wallet\_id    | string | Yes      |  Target e-wallet ID            |
+| amount        | number | Yes      | Payment amount                |
+| currency      | string | Yes      | Currency code (e.g., IDR)     |
+| order\_id     | string | Yes      | Unique merchant order ID      |
+| callback\_url | string | No       |  Callback URL for notification |
+
+**Example Request:**
 ```
-json
 {
   "wallet_id": "gopay",
   "amount": 150000,
@@ -218,7 +216,7 @@ json
   "callback_url": "https://merchant.com/callback"
 }
 ```
-### Response - success
+**Response – Success**
 ```
 {
   "payment_id": "pay_123456789",
@@ -226,26 +224,38 @@ json
   "qr_url": "https://pay.example.com/qr/pay_123456789",
   "expires_at": "2025-08-28T12:30:00Z"
 }
-```
-### Response - Failed
 
 ```
+Merchant receives payment ID, pending status, and QR code URL for customer.
+
+**Response – Failed**
+```
 {
-  “errorCode”: “200”,
-  "errorType": "invalid_credentials",
-  "errorMessage": "API key or secret is incorrect."
+  "status": "failed",
+  "errorCode": "400",
+  "errorType": "invalid_request",
+  "errorMessage": "Missing field: wallet_id"
 }
 
 ```
-## 4. Create Payment Request
-GET[/payments/{payments_id}](https://hitmeapi.com:8080/payment/{payments_id})
+Missing field wallet_id → request failed.
+💡 Non-Technical Description
+Merchants use this endpoint to create a new transaction. A QR code/link is generated for payment.
 
-### Header
+##4. Check Payment Status
+**endpoint**
 ```
-Content-Type: application/json  
+GET https://hitmeapi.com:8080/payments/{payment_id}
+```
+
+| Header        | Value                 | Function              |
+| ------------- | --------------------- | --------------------- |
+| Authorization | Bearer <access_token> | Required Bearer token |
+**header**
+```
 Authorization: Bearer <access_token>/(example : "eyJhbGciOiJIUzI1NiIsInR5cCI...",)
 ```
-### Response – Success
+**Response Success**
 ```
 {
   "payment_id": "pay_123456789",
@@ -256,41 +266,50 @@ Authorization: Bearer <access_token>/(example : "eyJhbGciOiJIUzI1NiIsInR5cCI..."
   "wallet_id": "gopay",
   "paid_at": "2025-08-28T12:29:00Z"
 }
-```
 
-### Response - Failed
+```
+API returns payment details and transaction status.
+
+**Response – Failed**
 ```
 {
-  “errorCode”: “200”,
-  "errorType": "invalid_credentials",
-  "errorMessage": "API key or secret is incorrect."
+  "status": "failed",
+  "errorCode": "404",
+  "errorType": "not_found",
+  "errorMessage": "Payment not found"
 }
+
+```
+Payment ID not found.
+
+💡 Non-Technical Description
+Merchants use this endpoint to check if a payment is successful, pending, or failed.
+
+##5. Refund Payment
+**Endpoint**
+```
+POST https://hitmeapi.com:8080/payments/{payment_id}/refund
+
 ```
 
-## 5. Refund Payment
-### endpoint
-POST[/payments/{payment_id}/refund](https://hitmeapi.com:8080/payment/{payments_id}/refund)
+**Header**
+| Header        | Value                 | Function                     |
+| ------------- | --------------------- | ---------------------------- |
+| Content-Type  | application/json      | Request/response JSON format |
+| Authorization | Bearer <access_token> | Required Bearer token        |```
 
-### header
 ```
 Content-Type: application/json
 Authorization: Bearer <access_token>/(example : "eyJhbGciOiJIUzI1NiIsInR5cCI...",)
 ``` 
-| Field    | Type   | Required | Description               |
-| -------- | ------ | -------- | ------------------------- |
-| `amount` | number | Yes      | Jumlah uang yang direfund |
-| `reason` | string | Yes      | Alasan refund             |
-
-
-### Example Request
+**Example Request:**
 ```
 {
   "amount": 50000,
   "reason": "Customer canceled order"
 }
 ```
-
-Response – Success
+**Response – Success**
 ```
 {
   "refund_id": "refund_987654321",
@@ -298,15 +317,20 @@ Response – Success
   "status": "processing",
   "amount": 50000
 }
-```
 
-Response – Failed
+```
+Refund successfully created with status processing.
+
+**Response – Failed**
 ```
 {
-  “errorCode”: “200”,
-  "errorType": "invalid_credentials",
-  "errorMessage": "API key or secret is incorrect."
+  "status": "failed",
+  "errorCode": "409",
+  "errorType": "refund_not_allowed",
+  "errorMessage": "Refund not allowed for this transaction"
 }
 ```
+Refund cannot be processed for this transaction.
 
-
+💡 Non-Technical Description
+This endpoint is used by merchants to refund a payment if the order is canceled.
