@@ -1,1 +1,1 @@
-# test-case-point-of-sales
+# POS Multiple E-Wallet
